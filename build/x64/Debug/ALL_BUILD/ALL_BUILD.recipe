@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>D:\salome\process_manager\build\Debug\process_monitor.dll</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>D:\salome\process_manager\build\x64\Debug\ALL_BUILD</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs>
+    <NonRecipeFileRef>
+      <FullPath>D:\salome\process_manager\build\ZERO_CHECK.proj</FullPath>
+    </NonRecipeFileRef>
+  </NonRecipeFileRefs>
+</Project>

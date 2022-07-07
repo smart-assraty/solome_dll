@@ -1,0 +1,5 @@
+LIBRARY	process_monitor
+EXPORTS 	
+	findMyProc
+	getDisks
+	manageMedia

@@ -1,0 +1,3 @@
+D:/salome/process_manager/build/CMakeFiles/process_monitor.dir
+D:/salome/process_manager/build/CMakeFiles/ALL_BUILD.dir
+D:/salome/process_manager/build/CMakeFiles/ZERO_CHECK.dir

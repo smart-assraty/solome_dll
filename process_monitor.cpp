@@ -26,42 +26,37 @@ bool findMyProc(){
   return false;
 }
 
-struct Drives{
-	char* volumeName;
-	char* volumeLabel;
-};
-
-
-struct Drive getDrive(char* volumeName){
-	char* volumeLabel = new char[100];
-	GetVolumeInformation(
+char* getLabel(char volumeLetter){
+	char* volumeName = new char[3];
+	volumeName[0] = volumeLetter;
+	volumeName[1] = ':';
+	volumeName[2] = '\\';
+	char* volumeLabel = new char[1024];
+	if(GetVolumeInformation(
 		volumeName,
 		volumeLabel,
-		100,
+		1024,
 		nullptr,
 		nullptr,
 		nullptr,
 		nullptr,
-		0
-	);
-	struct Drive drive;
-	drive.volumeName = volumeName;
-	drive.volumeLabel = volumeLabel;
-	strcat(drive.volumeLabel, '\0');
-	return drive;
+		0));
+	return volumeLabel;
 }
 
-Drive* getDrives(){
+char* getLetter(){
 	char* volumeName = new char[100];
 	int buf = GetLogicalDriveStrings(100, volumeName);
-	Drive* drives = new Drive[buf/4];
+	char* drive = new char[buf];
 	int size = 0;
-	for(int i = 0; i < buf+1; i += 4){
-		Drive d = getDrive(&volumeName[i]);
-		drives[size] = d;
-		++size;
+	for(int i = 0; i < buf+1; ++i){
+		if((volumeName[i] > 64 && volumeName[i] < 91) || (volumeName[i] > 96 && volumeName[i] < 123)){
+			drive[size] = volumeName[i];
+			++size;
+		}
 	}
-	return drives;
+	drive[size] = '\0';
+	return drive;
 }
 
 //IOCTL_STORAGE_LOAD_MEDIA

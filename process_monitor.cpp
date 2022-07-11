@@ -32,15 +32,7 @@ char* getLabel(char volumeLetter){
 	volumeName[1] = ':';
 	volumeName[2] = '\\';
 	char* volumeLabel = new char[1024];
-	if(GetVolumeInformation(
-		volumeName,
-		volumeLabel,
-		1024,
-		nullptr,
-		nullptr,
-		nullptr,
-		nullptr,
-		0));
+	GetVolumeInformation(volumeName, volumeLabel, 1024, nullptr, nullptr, nullptr, nullptr, 0);
 	return volumeLabel;
 }
 

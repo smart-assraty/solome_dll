@@ -1,5 +1,6 @@
 LIBRARY	process_monitor
 EXPORTS 	
 	findMyProc
-	getDrives
+	getLabel
+	getLetter
 	manageMedia

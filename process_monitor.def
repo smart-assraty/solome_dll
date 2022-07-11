@@ -1,5 +1,5 @@
 LIBRARY	process_monitor
 EXPORTS 	
 	findMyProc
-	getDisks
+	getDrives
 	manageMedia

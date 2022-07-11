@@ -1,7 +1,7 @@
 #include <windows.h>
 #include <tlhelp32.h>
 
-bool findMyProc() {
+bool findMyProc(){
   HANDLE hSnapshot;
   PROCESSENTRY32 pe;
   BOOL hResult;
@@ -26,23 +26,50 @@ bool findMyProc() {
   return false;
 }
 
-char* getDisks(){
-	char* lpBuffer = (char*)malloc(100 * sizeof(char));
-    int test = GetLogicalDriveStrings(100, lpBuffer);
-	char* result = new char[test];
-	memset(result, 0, test);
-	for(int i = 0; i < test; ++i){
-		if(lpBuffer[i] > 64 && lpBuffer[i] < 90) strcat(result, &lpBuffer[i]);
+struct Drives{
+	char* volumeName;
+	char* volumeLabel;
+};
+
+
+struct Drive getDrive(char* volumeName){
+	char* volumeLabel = new char[100];
+	GetVolumeInformation(
+		volumeName,
+		volumeLabel,
+		100,
+		nullptr,
+		nullptr,
+		nullptr,
+		nullptr,
+		0
+	);
+	struct Drive drive;
+	drive.volumeName = volumeName;
+	drive.volumeLabel = volumeLabel;
+	strcat(drive.volumeLabel, '\0');
+	return drive;
+}
+
+Drive* getDrives(){
+	char* volumeName = new char[100];
+	int buf = GetLogicalDriveStrings(100, volumeName);
+	Drive* drives = new Drive[buf/4];
+	int size = 0;
+	for(int i = 0; i < buf+1; i += 4){
+		Drive d = getDrive(&volumeName[i]);
+		drives[size] = d;
+		++size;
 	}
-	return result;
+	return drives;
 }
 
 //IOCTL_STORAGE_LOAD_MEDIA
 //IOCTL_STORAGE_EJECT_MEDIA
-void manageMedia(char* media, bool signal){
+bool manageMedia(char* media, bool signal){
 	HANDLE usb_drive;
 	usb_drive = CreateFileA(media, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	long unsigned int dw;
-	if(signal) DeviceIoControl(usb_drive, IOCTL_STORAGE_LOAD_MEDIA, NULL, 0, NULL, 0, &dw, NULL);
-	else DeviceIoControl(usb_drive, IOCTL_STORAGE_EJECT_MEDIA, NULL, 0, NULL, 0, &dw, NULL);
+	if(signal) return DeviceIoControl(usb_drive, IOCTL_STORAGE_LOAD_MEDIA, NULL, 0, NULL, 0, &dw, NULL);
+	else return DeviceIoControl(usb_drive, IOCTL_STORAGE_EJECT_MEDIA, NULL, 0, NULL, 0, &dw, NULL);
 }

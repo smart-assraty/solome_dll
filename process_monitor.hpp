@@ -1,7 +1,9 @@
-#include <windows.h>
-#include <tlhelp32.h>
+struct Drive{
+	char* letter;
+	char* label;
+};
 
 bool findMyProc();
-char* getLabel(char volumeLetter);
-char* getLetter();
+int getLength();
+Drive getLetter(int i);
 bool manageMedia(char* media, bool signal);

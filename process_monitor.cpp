@@ -6,14 +6,11 @@ bool findMyProc(){
   PROCESSENTRY32 pe;
   BOOL hResult;
   char* notepad = "notepad.exe";
-
   hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-
   if (INVALID_HANDLE_VALUE == hSnapshot) return 0;
-
   pe.dwSize = sizeof(PROCESSENTRY32);
   hResult = Process32First(hSnapshot, &pe);
-  
+ 
   while (hResult) {
     if (strcmp(notepad, pe.szExeFile) == 0) {
       return true;
@@ -26,29 +23,32 @@ bool findMyProc(){
   return false;
 }
 
-char* getLabel(char volumeLetter){
-	char* volumeName = new char[3];
-	volumeName[0] = volumeLetter;
-	volumeName[1] = ':';
-	volumeName[2] = '\\';
-	char* volumeLabel = new char[1024];
-	GetVolumeInformation(volumeName, volumeLabel, 1024, nullptr, nullptr, nullptr, nullptr, 0);
-	return volumeLabel;
+int getLength(){
+	char* lpBuffer = new char[100];
+	int buf_length = GetLogicalDriveStrings(100, lpBuffer);
+	return buf_length/4;
 }
 
-char* getLetter(){
-	char* volumeName = new char[100];
-	int buf = GetLogicalDriveStrings(100, volumeName);
-	char* drive = new char[buf];
-	int size = 0;
-	for(int i = 0; i < buf+1; ++i){
-		if((volumeName[i] > 64 && volumeName[i] < 91) || (volumeName[i] > 96 && volumeName[i] < 123)){
-			drive[size] = volumeName[i];
-			++size;
-		}
+struct Drive{
+	char* letter;
+	char* label;
+};
+
+Drive getLetter(int i){
+	char* lpBuffer = new char[100];
+	int buf_length = GetLogicalDriveStrings(100, lpBuffer);
+	char* volumeLabel = new char[1024];
+	Drive d;
+	bool hVol = GetVolumeInformation(&lpBuffer[i], volumeLabel, 1024, nullptr, nullptr, nullptr, nullptr, 0);
+	if(hVol == false){
+		d.letter = NULL;
+		d.label = NULL;
 	}
-	drive[size] = '\0';
-	return drive;
+	else{
+		d.letter = &lpBuffer[i];
+		d.label = volumeLabel;
+	}
+	return d;
 }
 
 //IOCTL_STORAGE_LOAD_MEDIA

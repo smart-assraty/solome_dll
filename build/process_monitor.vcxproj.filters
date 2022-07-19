@@ -6,6 +6,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="D:\salome\process_manager\process_monitor.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
     <CustomBuild Include="D:\salome\process_manager\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -14,6 +19,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{B5BD82A0-B6B3-3DE9-8709-42F85DB64114}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{C0C0B0D2-EFFD-3D24-889E-5259F487AF54}</UniqueIdentifier>
     </Filter>

@@ -2,5 +2,7 @@ LIBRARY	process_monitor
 EXPORTS 	
 	findMyProc
 	getLength
-	getLetter
+	getNumber
+	getNumberFromLetter
 	manageMedia
+	copyDir

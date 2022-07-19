@@ -1,5 +1,6 @@
 #include <windows.h>
 #include <tlhelp32.h>
+#include <boost/filesystem.hpp>
 
 bool findMyProc(){
   HANDLE hSnapshot;
@@ -23,6 +24,12 @@ bool findMyProc(){
   return false;
 }
 
+void copyDir(char* from, char* to){
+	boost::filesystem::path source = from;
+	boost::filesystem::path destination = to;
+	boost::filesystem::copy(source, destination);
+}
+
 int getLength(){
 	char* lpBuffer = new char[100];
 	int buf_length = GetLogicalDriveStrings(100, lpBuffer);
@@ -31,22 +38,37 @@ int getLength(){
 
 struct Drive{
 	char* letter;
-	char* label;
+	unsigned long int serialNumber;
 };
 
-Drive getLetter(int i){
+Drive getNumber(int i){
 	char* lpBuffer = new char[100];
 	int buf_length = GetLogicalDriveStrings(100, lpBuffer);
-	char* volumeLabel = new char[1024];
+	long unsigned int serialNumber;
 	Drive d;
-	bool hVol = GetVolumeInformation(&lpBuffer[i], volumeLabel, 1024, nullptr, nullptr, nullptr, nullptr, 0);
+	bool hVol = GetVolumeInformation(&lpBuffer[i], nullptr, 0, &serialNumber, nullptr, nullptr, nullptr, 0);
 	if(hVol == false){
 		d.letter = NULL;
-		d.label = NULL;
+		d.serialNumber = 0;
 	}
 	else{
 		d.letter = &lpBuffer[i];
-		d.label = volumeLabel;
+		d.serialNumber = serialNumber;
+	}
+	return d;
+}
+
+Drive getNumberFromLetter(char* letter){
+	Drive d;
+	long unsigned int serialNumber;
+	bool hVol = GetVolumeInformation(letter, nullptr, 0, &serialNumber, nullptr, nullptr, nullptr, 0);
+	if(hVol == false){
+		d.letter = NULL;
+		d.serialNumber = 0;
+	}
+	else{
+		d.letter = letter;
+		d.serialNumber = serialNumber;
 	}
 	return d;
 }
